@@ -7,10 +7,7 @@ const client = new Discord.Client({
 
 // require('dotenv').config();
 
-const TOKEN = 'MTQxMjE1MDk0OTg5NTczMzMxMA.Gycdrk.tMlStuYUQ_4rVlyIfO_BLt_RcVDJz7076kiFS0';
-// const CLIENT_ID = '1412150949895733310';
-// const GUILD_ID = '1354185101990297701';
-const OWNER_ID = '967200130757439580';
+
 
 // GUILD_ID for testing for one server.
 

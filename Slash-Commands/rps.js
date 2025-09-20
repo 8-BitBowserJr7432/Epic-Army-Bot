@@ -18,12 +18,12 @@ const commands = [
   },
 ];
 
-const rest = new REST({ version: '10' }).setToken('YOUR_TOKEN_HERE');
+const rest = new REST({ version: '10' }).setToken('');
 
 (async () => {
   try {
     await rest.put(
-      Routes.applicationGuildCommands('CLIENT_ID', 'GUILD_ID'),
+      Routes.applicationGuildCommands('', ''),
       { body: commands },
     );
     console.log('Slash commands registered!');
