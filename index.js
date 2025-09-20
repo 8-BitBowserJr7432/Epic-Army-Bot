@@ -5,15 +5,14 @@ const client = new Discord.Client({
     partials: ['CHANNEL', 'MESSAGE']
 });
 
-require('.env').config();
+// require('dotenv').config();
 
-const token = process.env.TOKEN;
-const clientID = process.env.clientID;
-const guildID = process.env.GuildID;
-const ownerId = process.env.OWNER_ID;
+const TOKEN = 'MTQxMjE1MDk0OTg5NTczMzMxMA.Gycdrk.tMlStuYUQ_4rVlyIfO_BLt_RcVDJz7076kiFS0';
+// const CLIENT_ID = '1412150949895733310';
+// const GUILD_ID = '1354185101990297701';
+const OWNER_ID = '967200130757439580';
 
 // GUILD_ID for testing for one server.
-
 
 client.once('ready', async () => {
     console.log(`Client has been logged into! ${client.user.username}`);
@@ -26,6 +25,18 @@ client.once('ready', async () => {
      }
    });
 });
+
+const activities = [
+  { name: 'Mini-games', type: 'PLAYING' },
+  { name: 'your commands with ! prefix', type: 'LISTENING' },
+  { name: 'Epic Army VI👾!!! Server', type: 'WATCHING' }
+];
+
+let i = 0;
+setInterval(() => {
+  client.user.setActivity(activities[i]);
+  i = (i + 1) % activities.length;
+}, 10000); // Change every 10 seconds
 
 client.on('messageCreate', async (message) => {
     if(message.content.toLowerCase() === "!test"){
@@ -72,17 +83,79 @@ client.on('messageCreate', async (message) => {
     }
 });
 
+// ...existing code...
+
+client.on('messageCreate', async (message) => {
+    if (message.content.startsWith('!guess')) {
+        // Generate a random number between 1 and 10
+        const number = Math.floor(Math.random() * 10) + 1;
+        const args = message.content.split(' ');
+        const guess = parseInt(args[1]);
+
+        if (!guess || guess < 1 || guess > 10) {
+            return message.reply('Please guess a number between 1 and 10. Usage: `!guess 5`');
+        }
+
+        if (guess === number) {
+            message.reply(`🎉 Correct! The number was ${number}.`);
+        } else {
+            message.reply(`❌ Wrong! The number was ${number}. Try again!`);
+        }
+    }
+});
+
+client.on('messageCreate', async (message) => {
+    if (message.content.startsWith('!rps')) {
+        const choices = ['rock', 'paper', 'scissors'];
+        const args = message.content.split(' ');
+        const userChoice = args[1]?.toLowerCase();
+
+        if (!choices.includes(userChoice)) {
+            return message.reply('Please choose rock, paper, or scissors. Usage: `!rps rock`');
+        }
+
+        const botChoice = choices[Math.floor(Math.random() * choices.length)];
+
+        let result;
+        if (userChoice === botChoice) {
+            result = "It's a tie!";
+        } else if (
+            (userChoice === 'rock' && botChoice === 'scissors') ||
+            (userChoice === 'paper' && botChoice === 'rock') ||
+            (userChoice === 'scissors' && botChoice === 'paper')
+        ) {
+            result = "You win!";
+        } else {
+            result = "You lose!";
+        }
+
+        message.reply(`You chose **${userChoice}**.\nI chose **${botChoice}**.\n${result}`);
+    }
+});
+
 client.on('interactionCreate', async interaction => {
-    if(!interaction.isCommand()) return;
+    if (!interaction.isCommand()) return;
 
-    const command = client.commands.get(interaction.commandName);
-    if(!command) return;
+    if (interaction.commandName === 'ping') {
+        await interaction.reply('🏓 Pong!');
+    }
 
-    try{
-        await command.execute(interaction);
-    } catch(error){
-        console.error(error);
-        await interaction.reply({ content: 'There was an error executing that command!', ephemeral: true })
+    if (interaction.commandName === 'rps') {
+        const userChoice = interaction.options.getString('choice').toLowerCase();
+        const choices = ['rock', 'paper', 'scissors'];
+        if (!choices.includes(userChoice)) {
+            return interaction.reply('Choose rock, paper, or scissors.');
+        }
+        const botChoice = choices[Math.floor(Math.random() * choices.length)];
+        let result;
+        if (userChoice === botChoice) result = "It's a tie!";
+        else if (
+            (userChoice === 'rock' && botChoice === 'scissors') ||
+            (userChoice === 'paper' && botChoice === 'rock') ||
+            (userChoice === 'scissors' && botChoice === 'paper')
+        ) result = "You win!";
+        else result = "You lose!";
+        await interaction.reply(`You chose **${userChoice}**.\nI chose **${botChoice}**.\n${result}`);
     }
 });
 

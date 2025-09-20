@@ -20,6 +20,8 @@
     "@discordjs/builders": "^1.11.3",
     "@discordjs/rest": "^2.6.0",
     "discord-api-types": "^0.38.25",
-    "discord.js": "^13.17.1"
+    "discord.js": "^14.22.1",
+    "dotenv": "^17.2.2",
+    "quick.db": "^9.1.7"
   }
 }
